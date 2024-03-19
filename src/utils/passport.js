@@ -1,10 +1,8 @@
-const passport = require('passport')
-const OAuth2Strategy = require("passport-google-oauth2").Strategy;
-// const googledb = require('../models/googleModal')
-const User  = require("../models/employeeModal2") 
-// const linkedindb = require('../models/linkedinModal') 
-const LinkedInStrategy = require('passport-linkedin-oauth2').Strategy;
-const jwt=require('jsonwebtoken')
+import passport from 'passport';
+import { Strategy as OAuth2Strategy } from 'passport-google-oauth2';
+import jwt from 'jsonwebtoken';
+import User from '../models/userModal.js';
+
 passport.use(
   new OAuth2Strategy({
       clientID:process.env.CLIENT_ID,
@@ -97,4 +95,4 @@ passport.deserializeUser((user,done)=>{
   done(null,user);
 });
 
-module.exports=passport;
+export default passport;

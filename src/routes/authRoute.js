@@ -1,32 +1,21 @@
-const express = require('express');
-const passport = require('../utils/passport');
-const { loginwithgoogle, logoutwithgoogle } = require('../controllers/authController');
+import express from 'express';
+import passport from '../utils/passport.js';
+import { logoutwithgoogle } from '../controllers/authController/authController.js';
+
 const router = express.Router();
-const jwt = require('jsonwebtoken')
-const User = require("../models/employeeModal2");
+
 
 const baseurl = process.env.BASE_URL
 
 // Define your auth routes here
 router.get("/auth/google", passport.authenticate("google", { scope: ["profile", "email"] }));
 
-// router.get("/auth/google/callback", passport.authenticate("google", {
-//     successRedirect: "http://localhost:3000/profile",
-//     failureRedirect: "http://localhost:3000/login"
-// }));
-
 router.get('/auth/google/callback', passport.authenticate('google', { failureRedirect: `${baseurl}/login` }), async(req, res) => {
   const token = req.user.token;
   if (!token) {
     return res.redirect(`${baseurl}/login`);
-
-    
   }
-  
-  
-   
   res.redirect(`${baseurl}/login?token=${token}`)
-  
     // res.status(200).json({message:"google login successfully", emp,token });
   });
 
@@ -49,14 +38,4 @@ router.get("/login/sucess",async(req,res)=>{
 
 router.get("/logout", logoutwithgoogle)
 
-//linkedin routes
-
-// router.get('/auth/linkedin', passport.authenticate('linkedin'));
-
-// LinkedIn Callback URL
-// router.get('/auth/linkedin/callback', passport.authenticate('linkedin', {
-//     successRedirect: '/profile',
-//     failureRedirect: '/login'
-// }));
-
-module.exports = router;
+export default router;

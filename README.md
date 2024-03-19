@@ -1,2 +1,0 @@
-# jsp-db
-for backend

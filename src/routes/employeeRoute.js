@@ -1,6 +1,17 @@
-const { signUp, login, updateEmployee, saveEmployee, uploadProfilePicture, getProfileDetailsById, getUser, getLoginUser, uploadNewResume  } = require("../controllers/employeeController2");
-const express = require('express')
-const multer = require("multer");
+import express from "express";
+import multer from "multer";
+import {
+  signUp,
+  login,
+  updateEmployee,
+  saveEmployee,
+  uploadProfilePicture,
+  getProfileDetailsById,
+  getUser,
+  getLoginUser,
+  uploadNewResume,
+  sendOTP,
+} from "../controllers/employee/employeeController.js";
 
 const upload = multer({ dest: "uploads/" });
 
@@ -15,6 +26,6 @@ router.get("/user/:id", getUser);
 router.put("/update/:id", updateEmployee);
 router.get("/users/me", getLoginUser);
 router.get("/getdetails/:id", getProfileDetailsById);
+router.post("/otpgenerate", sendOTP);
 
-
-module.exports = router;
+export  { router };
