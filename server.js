@@ -6,7 +6,7 @@ import { router } from './src/routes/employeeRoute.js';
 import authRoute from './src/routes/authRoute.js';
 import passport from './src/utils/passport.js';
 import keySkillsRoutes from './src/routes/keySkillsRoutes.js';
-import tokenValidator from './src/middleware/tokenValidator.js';
+import authenticateToken from './src/middleware/tokenValidator.js';
 import { connectToDatabase } from './db.config.js';
 
 dotenv.config();
@@ -26,7 +26,7 @@ app.use(
     })
 );
 
-app.use(tokenValidator);
+app.use(authenticateToken);
 
 // setuppassport
 app.use(passport.initialize());
