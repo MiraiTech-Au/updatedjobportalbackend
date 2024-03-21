@@ -1,5 +1,5 @@
 import express from 'express';
-import multer from 'multer';
+import fileUpload from 'express-fileupload';
 import {
     signUp,
     login,
@@ -13,14 +13,15 @@ import {
     sendOTP,
 } from '../controllers/employee/employeeController.js';
 
-const upload = multer({ dest: 'temp/' });
+
 
 const router = express.Router();
 
+router.use(fileUpload());
 router.post('/signup', signUp);
 router.post('/login', login);
-router.put('/upload/profile/:id', upload.single('image'), uploadProfilePicture);
-router.put('/upload/resume/:id', upload.single('resume'), uploadNewResume);
+router.put('/upload/profile/:id', uploadProfilePicture);
+router.put('/upload/resume/:id',  uploadNewResume);
 router.post('/save', saveEmployee);
 router.get('/user/:id', getUser);
 router.put('/update/:id', updateEmployee);

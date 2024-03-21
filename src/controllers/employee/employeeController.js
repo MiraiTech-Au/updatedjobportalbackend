@@ -119,21 +119,13 @@ export const signUp = async (req, res) => {
     }
 };
 
-export const generateAccessToken = async (req, res) => {
-        const refreshToken = req.body.token;
-            if (!refreshToken) return res.sendStatus(401);
-
-         // Validate Refresh Token
-        // Here, also check if the refresh token exists in the database or wherever it's stored
-        jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, (err, user) => {
-            if (err) return res.sendStatus(403);
-
-            const accessToken = jwt.sign({ id: user.id }, process.env.JWT_SECRET, {
-            expiresIn: '2h',
-             });
-        return res.json({ accessToken });
+export const generateAccessToken = async (user) => {
+    return new Promise((resolve, reject) => {
+        jwt.sign({ id: user.id }, process.env.JWT_SECRET, { expiresIn: '2h' }, (err, token) => {
+            if (err) reject(err);
+            resolve(token);
+        });
     });
-    return;
 };
 
 export const login = async (req, res) => {
@@ -170,11 +162,13 @@ export const login = async (req, res) => {
                 email: employee.email,
             };
 
+            console.log("process.env.JWT_SECRET" , process.env.JWT_SECRET)
             const token = jwt.sign(payload, process.env.JWT_SECRET, {
                 expiresIn: '2h', // Adjust the duration as per your requirement
             });
-            const accessToken = generateAccessToken(payload);
-            const refreshToken = generateAccessToken(payload);
+            console.log("payload----------------" , payload)
+            const accessToken = await generateAccessToken(payload);
+            const refreshToken = await  generateAccessToken(payload);
             res.header('Authorization', `Bearer ${accessToken}`);
             res.header('RefreshToken', `Refresh ${refreshToken}`);
             return successResponse(res, 200, 'Logged in successfully', {
@@ -257,7 +251,7 @@ export const uploadProfilePicture = async (req, res) => {
     try {
         const updateData = req.body; // or any other data you need to update
         const employeeId = req.params.id;
-        console.log(updateData, updateData);
+        console.log("<----------------data------------------------>", updateData, employeeId);
         let blobUrl;
         if (req.file) {
             if (isImageFile(req.file)) {
@@ -369,8 +363,11 @@ export const getUser = async (req, res) => {
     try {
         const userId = req.params.id;
         const user = await User.findById(userId);
+       if(user){
+           return successResponse(res, 200, 'User get successfully', user);
+       }
+        console.log("------------user---------------", user)
         // logger.info(`${moduleNames[0]} - Get. Success:${JSON.stringify(user)}`);
-        return successResponse(res, 200, 'User get successfully', user);
     } catch (error) {
         console.error('Error on getting user', error);
         // logger.error(
