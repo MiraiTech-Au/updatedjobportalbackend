@@ -2,15 +2,6 @@ import jwt from 'jsonwebtoken';
 import {errorResponse} from '../utils/helpers.js'
 
 const authenticateToken = (req, res, next) => {
-  console.log(req.url , "req.url")
-  if (
-    req.url === "/api/employee/v1/login" ||
-    req.url === "/api/employee/v1/signup" ||
-    req.url.startsWith("/auth/google")
-  ) {
-    return next();
-  }
-
   try {
     const token = req?.headers?.authorization?.split(" ")[1];
     if (!token) {

@@ -365,6 +365,8 @@ export const getUser = async (req, res) => {
         const user = await User.findById(userId);
        if(user){
            return successResponse(res, 200, 'User get successfully', user);
+       }else{
+        return errorResponse(res, 400, 'User not found');
        }
         console.log("------------user---------------", user)
         // logger.info(`${moduleNames[0]} - Get. Success:${JSON.stringify(user)}`);
