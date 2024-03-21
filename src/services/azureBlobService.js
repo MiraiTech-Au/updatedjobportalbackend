@@ -13,9 +13,12 @@ export const uploadImage = async (file) => {
   return blobClient.url;
 };
 export const uploadDoc = async (file) => {
-  const uniqueFileName = uuidv4() + '-' + file.originalname;
+  const uniqueFileName = uuidv4() + '-' + file.name;
   const blobClient = containerClient.getBlockBlobClient(uniqueFileName);
-  await blobClient.uploadFile(file.path);
+  await blobClient.uploadData(file.data, {
+    bufferSize: 4 * 1024 * 1024, // 4MB buffer size
+    maxBuffers: 20 // Maximum number of buffers
+  });
   return blobClient.url;
 };
 

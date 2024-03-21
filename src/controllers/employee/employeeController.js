@@ -294,42 +294,52 @@ const isDocumentFile = (file) => {
 
 export const uploadNewResume = async (req, res) => {
     try {
-        const updateData = req.body; // or any other data you need to update
         const employeeId = req.params.id;
+        const {file} = req.files
+        const user = await User.findById(employeeId);
+        if(user.resumes.length >= 5){
+            return errorResponse(res, 400, "You can only have up to 5 resumes.")
+        }
         let blobUrl;
-        if (req.file) {
-            if (isDocumentFile(req.file)) {
-                blobUrl = await uploadDoc(req.file);
-                updateData.profileResume = blobUrl;
+        if (file) {
+            if (isDocumentFile(file)) {
+                blobUrl = await uploadDoc(file);
+                const updatedEmployee = await User.findByIdAndUpdate(
+                    employeeId,
+                    { $push: { resumes: { resumeName: file.name, resumeData: blobUrl, dateAdded: new Date() } } },
+                    { new: true }
+                  ); 
+                  return successResponse(
+                    res,
+                    200,
+                    'Resume uploaded successfully',
+                    updatedEmployee
+                );
             } else {
-                // logger.error(
-                //   `${moduleNames[1]} - Update-Status:${400}, Error:${JSON.stringify(
-                //     responseType[9]
-                //   )}`
-                // );
-                return errorResponse(res, 400, responseType[9]);
+                return errorResponse(res, 400, responseType[9]); 
             }
         }
-
-        const updatedEmployee = await User.findByIdAndUpdate(
-            employeeId,
-            { profileResume: blobUrl },
-            { new: true }
-        );
-        // logger.info(
-        //   `${moduleNames[1]} - Update. Success:${JSON.stringify(updatedEmployee)}`
-        // );
-        return successResponse(
-            res,
-            200,
-            'Resume uploaded successfully',
-            updatedEmployee
-        );
     } catch (error) {
         return errorResponse(res, 500, error.message);
     }
 };
 
+export const getResumes = async(req,res) => {
+    try {
+      const userId = req.params.id;
+      // Find the user by ID
+      const user = await User.findById(userId);
+      if (!user || !user.profileResume) {
+        return res.status(404).send('Resume not found');
+      }
+      const resumeUrl = user.profileResume;
+      // Option 1: Redirect the client to the PDF URL
+      res.redirect(resumeUrl);
+    } catch (error) {
+        console.error(error);
+        return errorResponse(res, 500, "Server error");
+    }
+  }
 export const getProfileDetailsById = async (req, res) => {
     try {
         const employeeId = req.params.id;

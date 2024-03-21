@@ -11,6 +11,7 @@ import {
     getLoginUser,
     uploadNewResume,
     sendOTP,
+    getResumes,
 } from '../controllers/employee/employeeController.js';
 import authenticateToken from '../middleware/tokenValidator.js';
 
@@ -23,7 +24,8 @@ router.use(fileUpload());
 router.post('/signup', signUp);
 router.post('/login', login);
 router.put('/upload/profile/:id',auth, uploadProfilePicture);
-router.put('/upload/resume/:id',  auth , uploadNewResume);
+router.put('/upload/latestresume/:id',  auth , uploadNewResume);
+router.get("/get/resume/:id", getResumes);
 router.post('/save', auth, saveEmployee);
 router.get('/user/:id', auth, getUser);
 router.put('/update/:id', auth,updateEmployee);
