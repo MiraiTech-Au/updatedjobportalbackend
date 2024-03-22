@@ -1,4 +1,5 @@
-const mongoose = require('mongoose');
+// const mongoose = require('mongoose');
+import mongoose  from "mongoose";
 
 const employeeSchema = new mongoose.Schema({
   personalDetails: {
@@ -28,4 +29,7 @@ const employeeSchema = new mongoose.Schema({
   // Add other fields as needed
 });
 
-module.exports = mongoose.model('Employee', employeeSchema);
+
+const Employee = mongoose.model('Employee', employeeSchema);
+
+export default Employee;

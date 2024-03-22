@@ -1,7 +1,4 @@
-const User = require("../models/employeeModal2");
-
-
-exports.loginwithgoogle = async(req,res)=>{
+export const  loginwithgoogle = async(req,res)=>{
     try
     {
         if(req.user){
@@ -16,7 +13,7 @@ exports.loginwithgoogle = async(req,res)=>{
     }
 }
 
-exports.logoutwithgoogle = (req,res,next)=>{
+export const logoutwithgoogle = (req,res,next)=>{
     req.logout(function(err){
         if(err){return next(err)}
         res.redirect("http://localhost:3001");

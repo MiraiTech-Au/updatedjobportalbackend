@@ -1,4 +1,5 @@
-const mongoose = require("mongoose");
+// const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
 const linkedinSchema = new mongoose.Schema({
     linkedinId:String,
@@ -10,4 +11,4 @@ const linkedinSchema = new mongoose.Schema({
 
 const linkedindb = new mongoose.model("linkedinauth",linkedinSchema);
 
-module.exports = linkedindb;
+export default linkedindb;

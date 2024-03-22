@@ -1,5 +1,6 @@
-const mongoose = require("mongoose");
-
+// const mongoose = require("mongoose");
+ import mongoose from "mongoose";
+ 
 const googleSchema = new mongoose.Schema({
     googleId:String,
     displayName:String,
@@ -10,4 +11,4 @@ const googleSchema = new mongoose.Schema({
 
 const googledb = new mongoose.model("googleauth",googleSchema);
 
-module.exports = googledb;
+export default googledb
